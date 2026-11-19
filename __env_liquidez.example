@@ -1,0 +1,113 @@
+# ===== Bot de Liquidez (servicio aparte en Railway) =====
+TELEGRAM_TOKEN=123456:ABC...
+TELEGRAM_CHAT_ID=123456789
+# Backtest 30d: 5m = -25% (159 ops, negativo en LONG y SHORT, y tambien ANTES de comisiones); 15m = +28% (76 ops).
+# Si quieres probar mas TF: TIMEFRAMES=15m,30m (usa BT_DAYS=60 o mas para tener operaciones suficientes)
+TIMEFRAMES=15m
+CANDLES=500
+MIN_VOLUME_USDT=1000000
+CONCURRENCY=8
+MARKET_TYPE=swap
+EXCLUDE_NON_CRYPTO=true
+
+# Zonas de liquidez
+LQ_PIVOT=5
+LQ_LOOKBACK=300
+LQ_TOL_ATR=0.25
+LQ_EXTREME_N=20
+LQ_MIN_ZONE_SCORE=50
+
+# Liquidaciones estimadas (modelo apalancamiento x volumen)
+LQ_LEVERAGES=10,25,50,100
+LQ_LEV_WEIGHTS=0.3,0.3,0.25,0.15
+LQ_LONG_SHARE=0.6
+LQ_LIQ_RANGE_PCT=10
+
+# Setups y fuerza
+LQ_ENABLE_SOUP=true
+LQ_ENABLE_PLUS1=true
+LQ_ENABLE_BOUNCE=true
+LQ_MIN_SWEEP_ATR=0.05
+LQ_MAX_SWEEP_ATR=3.0
+LQ_VOL_MULT=1.5
+LQ_MIN_WICK=0.35
+LQ_MIN_QUALITY=72
+LQ_USE_EMA_FILTER=false
+
+# Gestion
+LQ_SL_ATR_BUFFER=0.1
+LQ_MIN_RR=1.5
+LQ_DEFAULT_RR=2.0
+LQ_MAX_RR=4.0
+LQ_MAX_RISK_PCT=3.0
+LQ_MAX_HOLD_BARS=48
+LQ_COOLDOWN_BARS=6
+
+# Resumen diario
+REPORT_TZ=Europe/Madrid
+REPORT_TIME=23:59
+FEE_PCT_ROUNDTRIP=0.1
+
+# Extras del indicador de TradingView (todos opcionales, true/false)
+LQ_USE_UT=true
+UT_ATR_PERIOD=10
+UT_MULT=2
+LQ_UT_REQUIRE=false
+LQ_USE_LINREG=true
+LINREG_LEN=11
+LINREG_SIGNAL=7
+LQ_USE_SR=true
+LQ_USE_HTF=true
+LQ_HTF_MIN_ALIGNED=0
+LQ_SHOW_PANEL=true
+
+# ===== Mejoras v2 =====
+# R:R minimo DESCONTANDO comisiones (con stops pequenos la comision se come el beneficio)
+LQ_MIN_NET_RR=1.2
+# Breakeven (0 = apagado). Probado a 1R en 30d: +2.80% -> -13.06% (76 salidas en BE, los TP caen de 58 a 32). Dejar apagado.
+LQ_BE_TRIGGER_R=0
+# No operar si los 3 TF superiores van TODOS en contra
+LQ_BLOCK_FULL_COUNTER=true
+# Riesgo correlacionado: una posicion por moneda y maximo por lado (0 = sin limite)
+LQ_ONE_PER_SYMBOL=true
+LQ_MAX_SAME_SIDE=8
+LQ_MAX_OPEN=0
+# Reintentos si BingX aun no publico la vela recien cerrada
+FETCH_RETRIES=2
+# Persistencia de posiciones/estadisticas (en Railway: anade un Volume y apunta aqui, p.ej. /data/liquidez_state.json)
+STATE_FILE=liquidez_state.json
+
+# ===== v3: extras del indicador MapleStax CBC + confluencias =====
+# CBC: cierre > maximo previo (alcista) / < minimo previo (bajista) en el TF del grafico (+3, +2 si giro reciente) y en el TF superior (+2)
+LQ_USE_CBC=true
+LQ_CBC_REQUIRE=false
+# Niveles de sesion (hora de Nueva York): ORB de NY/LN/AS y max/min del ultimo RTH de NY (+3 si la zona coincide)
+LQ_USE_SESSIONS=true
+LQ_OR_SESSIONS=NY,LN,AS
+LQ_OR_MINUTES=30
+# La zona coincide con la EMA200 o el VWAP del dia (+2)
+LQ_USE_DYN=true
+# La zona coincide con un numero redondo (+2). Apagado: sin evidencia previa
+LQ_USE_ROUND=false
+# Tope de puntos que pueden sumar TODOS los extras juntos (evita que la calidad se sature en 100)
+LQ_EXTRAS_CAP=22
+# Peso de cada extra en la calidad (1 = normal, 0 = no puntua). Nombres: UT, LinReg, S/R, CBC, Sesion, EMA200/VWAP, Redondo, HTF, Ayer, CBC HTF
+# Backtest 30d (esperanza por op. CON el extra vs SIN): LinReg -0.33% vs +0.08% · UT -0.29% vs +0.05% · CBC HTF -0.19% vs +0.05% · EMA200/VWAP -0.14% vs +0.04%
+# Los 4 apagados puntuan 0 pero el informe "Por extra" los sigue midiendo para decidir si vuelven.
+LQ_EXTRA_WEIGHTS=LinReg=0,UT=0,EMA200/VWAP=0,CBC HTF=0
+
+# Backtest (python liquidez_bot.py backtest)
+# Con menos de ~100 operaciones los porcentajes no son fiables: usa 60 dias o mas.
+BT_DAYS=60
+BT_TOP=40
+# Cache del historico: la 1a vez descarga, las siguientes reutilizan EXACTAMENTE los mismos datos (comparacion justa A/B y mucho mas rapido)
+BT_CACHE=bt_cache
+# BT_REFRESH=true      # ignorar la cache y volver a descargar
+# Procesos en paralelo (por defecto min(4, CPUs-1); 1 = sin paralelo)
+# BT_WORKERS=4
+# Guardar el informe y/o todas las operaciones (CSV) para analizarlas a fondo
+# BT_OUTPUT=informe.txt
+# BT_TRADES_OUT=operaciones.csv
+# Aplicar al backtest los limites del modo real (1 por moneda, LQ_MAX_SAME_SIDE por lado). false = comportamiento antiguo
+BT_PORTFOLIO=true
+# BT_SYMBOLS=BTC/USDT:USDT,ETH/USDT:USDT

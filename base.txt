@@ -1,0 +1,53 @@
+📊 Liquidez · resumen BACKTEST 30 dias (neto de comisiones)
+Operaciones: 223 · ✅ 69 (31%) · ❌ 154
+Media ganadora +1.44% · media perdedora -0.63%
+Esperanza por operación: +0.01% · Profit factor: 1.02
+Resultado total (suma de %): +2.12% · Drawdown máx: 29.56%
+Posiciones abiertas: 0
+
+Por tipo
+SOUP: 150 ops · 50G/100P · +5.49%
+SOUP+1: 72 ops · 19G/53P · -2.88%
+REBOTE: 1 ops · 0G/1P · -0.50%
+
+Por timeframe y lado
+5m LONG: 71 ops · 12G/59P · -22.46%
+5m SHORT: 79 ops · 27G/52P · -0.94%
+15m LONG: 27 ops · 11G/16P · +2.29%
+15m SHORT: 46 ops · 19G/27P · +23.24%
+
+Por calidad (para ajustar LQ_MIN_QUALITY)
+Calidad menos de 80: 151 ops · 31% acierto · esperanza +0.06%
+Calidad 80-88: 58 ops · 31% acierto · esperanza -0.07%
+Calidad 88 o más: 14 ops · 29% acierto · esperanza -0.15%
+
+Por extra (acierto y esperanza por op., con / sin)
+Ayer: con 17 ops 71% +0.72% | sin 206 ops 28% -0.05%
+CBC: con 53 ops 38% +0.05% | sin 170 ops 29% -0.00%
+CBC HTF: con 35 ops 31% -0.12% | sin 188 ops 31% +0.03%
+EMA200/VWAP: con 40 ops 18% -0.15% | sin 183 ops 34% +0.04%
+HTF: con 159 ops 28% -0.00% | sin 64 ops 38% +0.04%
+LinReg: con 36 ops 22% -0.35% | sin 187 ops 33% +0.08%
+S/R: con 71 ops 32% +0.06% | sin 152 ops 30% -0.01%
+Sesion: con 96 ops 29% -0.04% | sin 127 ops 32% +0.05%
+UT: con 27 ops 33% -0.23% | sin 196 ops 31% +0.04%
+
+Salidas: SL 151 · TIEMPO 17 · TP 55
+
+Mejores
+✅ CRV/USDT SHORT 15m SOUP+1 +4.08%
+✅ STRK/USDT SHORT 15m SOUP +3.72%
+✅ NEAR/USDT SHORT 15m SOUP +3.69%
+✅ CRV/USDT SHORT 15m SOUP+1 +3.44%
+✅ INJ/USDT SHORT 15m SOUP +3.38%
+
+Peores
+❌ ZEC/USDT LONG 5m SOUP -2.39%
+❌ ZEC/USDT SHORT 15m SOUP -2.34%
+❌ EVAA/USDT SHORT 5m SOUP -2.30%
+❌ 1000PEPE/USDT LONG 5m SOUP -2.00%
+❌ TURBO/USDT LONG 15m SOUP -1.64%
+
+Nota: simulacion con cierre de vela como entrada, comisiones del config y SL antes que TP si caen en la misma vela.
+TF superiores reconstruidos agregando velas base (el EMA9/21 diario y semanal necesitan 25+ velas: usa BT_DAYS>=30 para incluirlos).
+No es garantia de resultados futuros.

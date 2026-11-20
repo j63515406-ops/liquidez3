@@ -38,8 +38,9 @@ def env_weights(name, default=""):
     for part in os.getenv(name, default).split(","):
         if "=" in part:
             k, v = part.rsplit("=", 1)
+            k = k.strip().replace("_", " ")     # CBC_HTF == CBC HTF (en Railway es mas comodo sin espacios)
             try:
-                out[k.strip()] = float(v)
+                out[k] = float(v)
             except ValueError:
                 pass
     return out
